@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">		
+		<title>商品分类</title>
+		<link rel="stylesheet" href="css/良仓.css" />
+	</head>
+	<body>
+		<div class="header">
+        <div class="header-top">
+            <div class="header-fixed">
+                <em></em>
+                <ul>
+                    <li>
+                       <a id="header-a" href="#">登录</a>
+                       <a id="header-b" href="#">注册</a>
+                    </li>
+                    <li class="line">
+                    </li>
+                    <li>
+                       <a href="#">购物车</a>
+                    </li>
+                    <li class="line">
+                    </li>
+                    <li>
+                       <a href="#">消息</a>
+                    </li>
+                    <li class="line">
+                    </li>
+                    <li>
+                       <a href="#">添加良品</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="header-bottom">
+            <ul id="f1">
+                <!--<li class="header-firstli">
+                   <a href="#">首页</a>
+                </li>
+                <li class="header-middleli">
+                   <a href="#">商店</a>
+                </li>
+                <li class="header-middleli">
+                   <a href="#">杂志</a>
+                </li>
+                <li class="header-middleli">
+                   <a href="#">分享</a>
+                </li>
+                <li class="header-lastli">
+                   <a href="#">达人</a>
+                </li>-->
+            </ul>
+        </div>
+     </div>
+     <div class="main-first">
+     	<ul id="first-ul">
+     		
+     	</ul>
+     </div>
+     
+     
+     
+     <script src="js/jquery-1.12.3.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			
+			$(function(){
+				
+				//页面导航；分类列表功能
+				$.get("http://h6.duchengjiu.top/shop/api_cat.php",function(data){
+					var obj = data;
+//					console.log(obj);
+					
+					for(var i=0;i<obj.data.length;i++){						
+						$("#f1").append('<li><a href="list.html?cat_id=' 
+						+obj.data[i].cat_id+ '">' + obj.data[i].cat_name +  
+						'</a></li>');
+					}
+					
+				})
+				
+				//通过location.search获取get传参的数据 截取？后面的内容
+			    var str = location.search.substr(1);
+				//用分割方法得到 = 号两边内容
+				var catId = str.split("=")
+				//用下标找到id的值
+//				console.log(catId[1]);
+				
+				
+				$.ajax({
+				"url": "http://h6.duchengjiu.top/shop/api_goods.php",
+				"type": "GET",
+				"data": {
+					"cat_id": catId[1]
+				},
+				"dataType": "json",
+				"success": function(date){
+				var obj = date;
+//					console.log(obj);
+					
+					for(var i=0;i<obj.data.length;i++){
+						
+						$("#first-ul").append('<li><img src="' 
+						+obj.data[i].goods_thumb+ 
+						'" /><p class="first-line">'
+						+obj.data[i].goods_name+ '</p><p class="second-line">'+
+						'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' +obj.data[i].goods_desc+
+						'</p><p class="price">￥' +obj.data[i].price+ '</p></li>');
+					}	
+				}
+			})	
+			})
+//			$("#goodsUl").append('<li><img src="' 
+//			+obj.data[i].goods_thumb+ '" /><p>' 
+//			+obj.data[i].goods_name+ '</p><p>' +obj.data[i].goods_desc+ 
+//			'</p><p class="price">' +obj.data[i].price+ '</p></li>');
+		</script>
+	</body>
+</html>
