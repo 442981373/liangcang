@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>注册页面</title>
+	    <style type="text/css">
+	    	*{margin:0;padding:0;}
+	    	body{width:100%;height:500px;background-color:skyblue;}
+	    	.div1{width:700px;height:500px;margin:80px auto;background-color:pink;overflow:hidden;}
+	    	h2{width: 100px;height:40px;margin:50px auto;line-height:40px;text-align:center;}
+	    	p{height:40px;margin-left:100px;}
+	    	em{display: block;width:50px;height: 40px;font-style:normal;float:left;margin-left:40px;}
+	    	input{margin-left: 50px;height:28px;width:210px;}
+	    	#enroll{width:160px;height:30px;margin:30px 130px;}
+	    	.success{background: yellowgreen;color: white;font-size: 16px;display: none;}
+			.error{background:#F40;color: white;font-size: 16px;display: none;}
+	
+	    </style>
+	</head>
+	<body>
+		<div id="" class="div1">
+			<h2>注册信息</h2>
+			<p>
+				<em>用&nbsp;户&nbsp;名：</em>
+				<input type="text" name="username" placeholder="请输入用户名"/>
+				<span class="success">用户名可以使用</span>
+				<span class="error">该用户名已使用！请从新输入！</span>
+			</p>
+			<p>
+				<em>新&nbsp;密&nbsp;码：</em>
+				<input type="password" name="password" placeholder="请创建6~11位密码"/><br />
+			</p>
+			<!--<p>
+				<em>密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码：</em>
+				<input type="password" name="password" placeholder="请输入6~11位密码"/><br />
+			</p>-->
+			<p>
+				<input type="button" value="注册" id="enroll"/>
+			</p>
+		</div>		
+		
+		<!--//URL:  协议：//IP：端口/path（路径）/文件夹/文件？查询的参数#a-->		
+		<script src="js/jquery-1.12.3.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+						
+			//用户名验证是否重复
+			$('input[name="username"]').blur(function(){
+				var username = $('input[name="username"]').val();
+//				console.log( $(this).val() );			
+				$.ajax({
+					"url": "http://h6.duchengjiu.top/shop/api_user.php",
+					"type": "POST",
+					"dataType": "json",
+					"data": {
+						"status": "check",
+						"username": username
+					},
+					"success": function(response){
+												
+						if( response.code === 0){
+							//注册成功后替换登录、注册
+							$(".success").show();
+							$(".error").hide();														
+						/*用户名已存在时else*/	
+						}else if( response.code === 2001 ){
+							$(".error").show();
+							$(".success").hide();
+						}
+						
+					}
+				})
+				
+			})
+			/*注册验证*/
+			$("#enroll").click(function(){
+			var username = $('input[name="username"]').val();/*val()获取数据*/
+			var password= $('input[name="password"]').val();
+			
+			if(password.length<5 || password.length>12){
+				alert("密码输入不正确，请重新输入");
+				return;
+			}
+						
+				$.ajax({
+					"type": "POST",   /*数据类型*/
+					"url": "http://h6.duchengjiu.top/shop/api_user.php",    /*路径*/
+					"data":{
+						"status":"register",    /*注册*/
+						"username":username,     /*用户名*/
+						"password":password     /*密码*/
+					},
+					"dateType":"JSON",             /*数据类型*/
+					"success": function(response){         /*success成功           response回答、响应*/
+//						console.log(response);
+						alert(response.message);
+					    window.location.href = "login.html";
+					}
+				});
+//				$.ajax({
+//					"type": "POST",
+//					"url": "http://h6.duchengjiu.top/shop/api_user.php",
+//					"data": {
+//						"status": "register",
+//						
+//						"username": username,
+//						"password": password
+//					},
+//					"dataType": "json",
+//					"success": function(response){
+//						if(response.code === 0){
+//							alert("注册成功");
+//							window.location.href = "login.html";
+//						}
+//					}
+//				});
+
+			})
+		</script>
+	</body>
+</html>

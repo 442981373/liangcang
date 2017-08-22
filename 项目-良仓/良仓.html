@@ -9,14 +9,18 @@
 <link href="css/良仓.css" rel="stylesheet" type="text/css">
 </head>
 <body>
+	<!--头部-->
      <div class="header">
         <div class="header-top">
             <div class="header-fixed">
                 <em></em>
                 <ul>
-                    <li>
-                       <a id="header-a" href="#">登录</a>
-                       <a id="header-b" href="#">注册</a>
+                	<li class="first-li">
+                		<a href="sousuo.html">搜索</a>
+                	</li>
+                    <li id="header-li" class="header-li">
+                       <a id="header-a" href="login.html">登录</a>
+                       <a id="header-b" href="良仓-register.html">注册</a>
                     </li>
                     <li class="line">
                     </li>
@@ -36,30 +40,19 @@
                 </ul>
             </div>
         </div>
+        <!--商品栏-->
         <div class="header-bottom">
             <ul id="f1">
-                <!--<li class="header-firstli">
-                   <a href="#">首页</a>
-                </li>
-                <li class="header-middleli">
-                   <a href="#">商店</a>
-                </li>
-                <li class="header-middleli">
-                   <a href="#">杂志</a>
-                </li>
-                <li class="header-middleli">
-                   <a href="#">分享</a>
-                </li>
-                <li class="header-lastli">
-                   <a href="#">达人</a>
-                </li>-->
+                
             </ul>
         </div>
-     </div>    
+     </div> 
+     <!--商品列表-->
      <div class="main-first">  	
      	<ul id="first-ul">
      		
      	</ul>
+     	<!--轮播图-->
      	<div class="carousel">
      		<div class="carousel-div">
      			<a class="leftBtn"  id="leftBtn"></a>
@@ -91,18 +84,51 @@
 			</div>
      	</div>   	
      </div>
+     <!--底部-->
      <div class="main-second">
-     	<a href="#" class="second-a"><p></p>良仓商店 / OUR SHOP</a>
+     	<a href="#" class="second-a">
+     		<p class="p-first"></p>
+     		<p class="p-last"></p>
+     	</a>
+     	<div class="second-div">
+     		<div class="fore1">
+     			<em></em>
+     			<p class="fore-p1">全球精品</p>
+     			<p class="fore-p2">Global Selections</p>
+     		</div>
+     		<div class="fore2">
+     			<em></em>
+     			<p class="fore-p1">正品保证</p>
+     			<p class="fore-p2">Authenticity Guaranteed</p>
+     		</div>
+     		<div class="fore3">
+     			<em></em>
+     			<p class="fore-p1">全场包邮</p>
+     			<p class="fore-p2">Free Delivery</p>
+     		</div>
+     		<div class="fore4">
+     			<em></em>
+     			<p class="fore-p3"></p>
+     			<p class="fore-p2">工作日 09:00-18:00</p>
+     		</div>
+     	</div>
      </div>
+       
+     <!--页脚-->
      <div class="main-third"></div>
      
      
      
      
      <script src="js/jquery-1.12.3.min.js" type="text/javascript" charset="utf-8"></script>
-		<script type="text/javascript">		
-			$(function(){
+		<script type="text/javascript">	
+			
+			//判断当前用户已登录则显示用户名，否则显示注册登录
+			if( localStorage.getItem("token")){
+				$("#header-li").html("用户： "+localStorage.getItem("username"));
 				
+			}
+			$(function(){				
 				//页面导航；分类的列表功能
 				$.get("http://h6.duchengjiu.top/shop/api_cat.php",function(data){
 					var obj = data;
@@ -120,8 +146,8 @@
 //					console.log(obj);					
 					for(var i=0;i<obj.data.length;i++){						
 						$("#first-ul").append('<li><img src="' 
-						+obj.data[i].goods_thumb+ '" /><p class="first-line"><a href=detail.html?goods_id="'
-						+obj.data[i].goods_id+'">' +obj.data[i].goods_name+'</a></p><p class="second-line">' 
+						+obj.data[i].goods_thumb+ '" /><p class="first-line"><a href=sousuo.html?goods_id='
+						+obj.data[i].goods_id+'>' +obj.data[i].goods_name+'</a></p><p class="second-line">' 
 						+'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' +obj.data[i].goods_desc+ 
 						'</p><p class="price">￥' +obj.data[i].price+ '</p></li>');
 					}					
@@ -135,11 +161,9 @@
 			var $imgLis = $("carousel-img li");
 			var $cilclesLis = $(".circles ol li");
 			//克隆图片第1张
-			$(".carouselImg ul").append($imgLis.eq(0).clone());
-	
+			$(".carouselImg ul").append($imgLis.eq(0).clone());	
 			//信号量
-			var idx = 0;
-	
+			var idx = 0;	
 			//定时器
 			var timer = setInterval(rightBtnHandler, 5000);
 			//鼠标进入定时器停止
@@ -148,11 +172,9 @@
 			});
 			$carousel.mouseleave(function(){
 				timer = setInterval(rightBtnHandler, 5000);
-			});
-	
+			});	
 			//监听
 			$(".rightBtn").click(rightBtnHandler);
-	
 			function rightBtnHandler(){
 				//函数截流
 				if($carouselImg.is(":animated")) return;
@@ -166,8 +188,6 @@
 				});
 				changeCircle();
 			}
-	
-	
 			//监听
 			$(".leftBtn").click(function(){
 				//函数截流
@@ -180,9 +200,7 @@
 				}
 				$carouselImg.animate({"left" : -1000 * idx},300);
 				changeCircle();
-			});
-	
-	
+			});		
 			//小点的监听
 			$cilclesLis.click(function(){
 				//你点击第几个小点，信号量就是多少
@@ -191,9 +209,7 @@
 				$carouselImg.animate({"left" : -1000 * idx},300);
 				//更改小点
 				changeCircle();
-			});
-	 
-	
+			});	 	
 			//更改小点
 			function changeCircle(){
 				var n = idx <= 7 ? idx : 0;

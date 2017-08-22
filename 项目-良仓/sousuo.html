@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>搜索</title>
+		<link href="css/良仓.css" rel="stylesheet" type="text/css">
+		<style type="text/css">
+			*{margin:0;padding:0;}
+	    	body{width:100%;background-color:skyblue;}
+	    	.pc1{width:1000px;height:30px;margin:40px auto 0;}
+	    	#str{width:400px;height:30px;line-height:30px;}
+	        #btn{width: 50px;height:30px;}
+	        #box{width:1000px;margin:30px auto 0;font-weight:bold;}
+	        #box img{width:300px;height:300px;}
+	        #box .price{color:#f40;}
+	        #box p{height:32px;line-height:32px;} 
+		</style>
+	</head>
+	<body>
+		<!--头部-->
+        <div class="header-top">
+            <div class="header-fixed">
+                <em></em>
+                <ul>
+                    <li>
+                       <a id="header-a" href="login.html">登录</a>
+                       <a id="header-b" href="良仓-register.html">注册</a>
+                    </li>
+                    <li class="line">
+                    </li>
+                    <li>
+                       <a href="#">购物车</a>
+                    </li>
+                    <li class="line">
+                    </li>
+                    <li>
+                       <a href="#">消息</a>
+                    </li>
+                    <li class="line">
+                    </li>
+                    <li>
+                       <a href="#">添加良品</a>
+                    </li>
+                </ul>
+            </div>
+        </div> 
+        <p class="pc1">
+			<input type="text" id="str" placeholder="输入您需要的物品"/>
+			<input type="button" id="btn" value="搜索" />
+		</p>		
+		<div id="box"></div>
+		
+		
+		<script src="js/jquery-1.12.3.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			
+			$(function(){
+//				var text = $('input[placeholder="输入您需要的物品"]').val();
+//				if()
+				
+//				通过location.search获取get传参的数据 截取？后面的内容
+				var str = location.search.substr(1);
+//				用分割方法得到 = 号两边内容
+				var goodsId = str.split("=");
+//				用下标找到id的值
+				console.log(goodsId[1]);
+				
+				$.ajax({
+				"url": "http://h6.duchengjiu.top/shop/api_goods.php",
+				"type": "GET",
+				"data": {
+					"goods_id": goodsId[1]
+				},
+				"dataType": "json",
+				"success": function(response){
+					var obj = response;
+					$("#box").html('<li><img src="' +obj.data[0].goods_thumb+ '" /><p>' 
+					+obj.data[0].goods_name+ '</p><p>' +obj.data[0].goods_desc+ 
+					'</p><p class="price">' +obj.data[0].price+ '</p></li>')
+				}
+			})
+							
+				//通过goods_id查询商品数据
+			$("#btn").click(function(){				
+				var strNew = $("#str").val();
+				console.log(strNew);								
+				$.ajax({
+				"url": "http://h6.duchengjiu.top/shop/api_goods.php",
+				"type": "GET",
+				"data": {
+					"search_text": strNew
+				},
+				"dataType": "json",
+				"success": function(response){
+					var obj = response;
+					console.log(obj);
+					$("#box").html('<li><img src="' +obj.data[0].goods_thumb+ 
+					'" /><p>' +obj.data[0].goods_name+ '</p><p>' +obj.data[0].goods_desc+
+					'</p><p class="price">￥' +obj.data[0].price+ '</p></li>')
+				}								
+			})
+			})
+		})
+						
+		</script>
+	</body>
+</html>

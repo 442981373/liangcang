@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			*{margin:0;padding:0;}
+	    	body{width:100%;height:500px;background-color:#AADFDF;}
+	    	.div1{width:700px;height:500px;margin:80px auto;background-color:goldenrod;overflow:hidden;border-radius:50%;}
+	    	h2{width: 100px;height:40px;margin:50px auto;line-height:40px;text-align:center;}
+	    	p{height:40px;margin-left:100px;}
+	    	em{display: block;width:50px;height: 40px;font-style:normal;float:left;margin-left:40px;}
+	    	input{margin-left: 50px;height:28px;width:210px;}
+	    	#login{width:160px;height:30px;margin:30px 130px;}
+		</style>
+	</head>
+	<body>
+		<div id="" class="div1">
+			<h2>登录界面</h2>
+			<p>
+				<em>用&nbsp;户&nbsp;名：</em>
+				<input type="text" name="username" placeholder="请输入您的用户名"/>
+			</p>
+			<p>
+				<em>密&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码：</em>
+				<input type="password" name="password" placeholder="请输入您的密码"/><br />
+			</p>
+			<p>
+				<input type="button" id="login" value="登录" />
+			</p>
+		</div>
+		
+		
+		
+		<script src="js/jquery-1.12.3.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			
+			//判断当前用户已登录则显示用户名，否则显示注册登录
+			if( localStorage.getItem("token")){
+				$("body").html( localStorage.getItem("username") + "您已经登录成功！请不要重复登录");
+			
+				setTimeout(function(){
+					
+					location.href = "良仓.html";
+				},2000);
+			}
+						
+			$(function(){
+				//登录验证
+				$("#login").click(function(){
+					//获取用户名和密码
+					var username = $('input[name="username"]').val();
+					var password = $('input[name="password"]').val();
+					
+					$.ajax({
+						"url": "http://h6.duchengjiu.top/shop/api_user.php",
+						"type": "POST",
+						"data": {
+							"status": "login",
+							"username": username,
+							"password": password
+						},
+						"dataType": "json",
+						"success": function(response){
+//							console.log(response);							
+//							localStorage.setItem("token",response.data.token);						
+							//当登录成功的时候
+							if( response.code === 0 ){
+								//把个人信息存入变量data
+								var data = response.data;
+								//遍历每一项   prop属性单词的简写这个是变量
+								for( prop in data ){									
+									//判断这个属性是否是本身的属性
+									if( data.hasOwnProperty(prop)){
+										//存储到本地仓库，(属性,数据[属性])
+										localStorage.setItem(prop,data[prop]);
+										//data[prop]相当于response.data.username
+									}
+								}
+							//写在if code===0 里面！成功后提示，然后跳转到首页
+							alert(response.message);
+							location.href = "良仓.html";		
+							}							
+						}
+					})					
+				})	
+			})			
+		</script>
+	</body>
+</html>
